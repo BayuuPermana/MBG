@@ -1,0 +1,86 @@
+Business Model Canvas: GiziSync (MBG Management Platform)  
+Project Name: GiziSync (Sistem Manajemen & Pelaporan Gizi Nasional)  
+Date: November 29, 2025  
+Status: Enterprise / B2G Concept  
+
+1. Executive Summary  
+The Core Concept: A dedicated ERP (Enterprise Resource Planning) web and mobile platform tailored for the decentralized kitchens (Cabang/Dapur Umum) within the MBG program. It digitalizes daily procurement, financial reporting, and menu planning processes. Importantly, it consolidates procurement data to generate a Real-Time Food Price Map, enabling the central government to audit expenses and track regional inflation.  
+
+2. The Business Model Canvas  
+
+💎 Value Propositions  
+For the "Cabang" (Kitchen Operators):  
+- Automated Reporting: Transforms daily purchase notes into compliant financial reports (SPJ) instantly, eliminating manual Excel work.  
+- Budget Controls: Notifies operators if their menu plans exceed the daily budget per child (e.g., Rp 15,000).  
+- Cash Flow: Accelerated fund disbursement as digital reports are verified faster than paper ones.  
+
+For the Government (Badan Gizi Nasional):  
+- Anti-Corruption (Markup Detection): Flags anomalies immediately if a kitchen reports egg prices significantly above the district average.  
+- Real-Time Inflation Data: Provides a dashboard displaying prices of rice, eggs, and chicken across 38 provinces in real-time.  
+
+👥 Customer Segments  
+Primary (Users): Operators of the "Satuan Pelayanan Gizi" (Kitchens) — likely UMKM, Cooperatives (Koperasi), or BUMDes participating in the program.  
+Primary (Buyer/Regulator): Badan Gizi Nasional (National Nutrition Agency) & Ministry of Finance.  
+Secondary (Data Consumers): BPS (Statistics Bureau), Ministry of Trade (Kemendag), and FMCG suppliers.  
+
+📢 Channels  
+- Mandatory Integration: Collaborating with the Government to establish GiziSync as the "Official Standard App" for reporting.  
+- Technical Bimbingan Teknis (Bimtek): Conducting training roadshows in every Regency (Kabupaten) to instruct operators on app usage.  
+- Web Portal: admin.gizisync.id serves as the Central Command Center.  
+
+❤️ Customer Relationships  
+- WhatsApp Bot Support: A dedicated WA bot assists kitchen operators with quick Q&A, addressing tech challenges like "How do I upload a receipt?"  
+- Regional Coordinators: Field officers support kitchens during initial setup.  
+
+💰 Revenue Streams  
+- B2G Licensing Model: The government pays an annual license fee covering all branches.  
+- Transaction Fee (Fintech): Integration with Himbara Banks allows a micro or flat admin fee for payment routing when disbursements occur via the platform.  
+- Data Monetization (Commodity Intelligence): Aggregated, anonymized price data is sold to large food suppliers or commodity traders (e.g., "Egg demand in East Java is spiking").  
+
+🔑 Key Activities  
+- Anomaly Detection Engine: Developing AI to compare "Input Price" against "Market Average" to detect fraud.  
+- UX Simplification: Creating an interface simple enough for non-technical rural users to input data easily.  
+- Security & Compliance: Ensuring data adheres to BPK (Audit Board) standards.  
+
+🧱 Key Resources  
+- Commodity Database: A baseline market price database (API from Kemendag) for initial calibration.  
+- Tech Stack: Cloud infrastructure (AWS/GCP/AliCloud Indonesia Region) capable of handling inputs from over 50,000 locations concurrently.  
+- Audit Experts: Consultants knowledgeable in government financial reporting (SPJ) standards.  
+
+🤝 Key Partners  
+- Badan Gizi Nasional: Program owner.  
+- Bank Indonesia / Himbara: For digital wallet and bank transfer integrations.  
+- Local Market Associations (Pasar Jaya, etc.): To validate price data.  
+
+📉 Cost Structure  
+- Cloud Infrastructure: High storage costs for millions of receipt photos.  
+- Field Operations: Extensive travel and personnel budget for training thousands of operators.  
+- Security Audits: Penetration testing to prevent data breaches.  
+
+3. Roadmap & Next Steps  
+
+Phase 1: The Pilot (Validating the Price Tracker)  
+- Goal: Demonstrate the effectiveness of "Markup Detection."  
+- Action: Deploy in one city (e.g., Solo or Bogor) with 50 kitchens.  
+- Feature: Simple input asking "What did you buy?" plus "Upload Photo of Receipt."  
+- Outcome: Produce a "Heatmap of Egg Prices" for that city to showcase data value to the government.  
+
+Phase 2: The Compliance Engine (B2G Pitch)  
+- Goal: Become the official tool.  
+- Action: Develop an automatic SPJ (Surat Pertanggungjawaban) generator.  
+- Pitch: "Using our app eliminates the need for an accountant by automatically generating PDFs for the government."  
+
+Phase 3: The Marketplace (Supply Chain Optimization)  
+- Goal: Close the loop.  
+- Action: If Kitchen A requires 50kg of chicken daily and prices are high, the system connects them directly with a local farm offering lower prices.  
+
+4. Technical Challenges & Risk Assessment  
+
+- Fake Data Entry: Operators might input false low prices to conceal information or false high prices to embezzle funds.  
+- Solution: OCR (Optical Character Recognition) on receipts requiring users to photograph receipts; AI verifies numbers and rejects mismatches.  
+
+- Internet Connectivity: Rural kitchens may experience poor signals.  
+- Solution: "Offline-First" Progressive Web App (PWA) that functions offline, stores data locally, and syncs when connectivity returns.  
+
+- UI Complexity: Kitchen staff are cooks, not accountants.  
+- Solution: Icon-based UI featuring pictures of eggs, rice, etc., with minimal typing and voice-to-text input for quantities.

@@ -35,8 +35,23 @@ The REST API server for GiziSync, built with Node.js, Express, and MongoDB.
    ```
 
 ## API Endpoints
+### Auth & Users
 - `POST /api/auth/register`: Register new user.
 - `POST /api/auth/login`: Login user.
+- `GET /api/auth`: Get all users.
+- `DELETE /api/auth/:id`: Delete user.
+- `PUT /api/auth/:id`: Update user profile/password.
+
+### Kitchens
 - `GET /api/kitchens`: Get all kitchens.
-- `POST /api/reports`: Submit daily report.
+- `POST /api/kitchens`: Create new kitchen.
+- `DELETE /api/kitchens/:id`: Delete kitchen.
+
+### Commodities
 - `GET /api/commodities`: Get commodity prices.
+- `POST /api/commodities`: Create/Update commodity.
+- `DELETE /api/commodities/:id`: Delete commodity.
+
+### Reports
+- `GET /api/reports`: Get all reports.
+- `POST /api/reports`: Submit daily report.

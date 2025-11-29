@@ -3,10 +3,14 @@
 The frontend application for GiziSync, built with React, Vite, Tailwind CSS, and Shadcn UI.
 
 ## Features
-- **Login Page**: Role-based access (Admin/Kitchen).
+- **Login Page**: Role-based access (Admin/Kitchen) with persistent session.
 - **Dashboard (Admin)**: Real-time monitoring of inflation and kitchen stats.
-- **Input Form (Kitchen)**: Daily procurement reporting with receipt upload.
-- **Reports**: View generated SPJ and transaction history.
+- **Input Form (Kitchen)**: Daily procurement reporting with smart commodity selection and receipt upload.
+- **Reports**: View generated SPJ, transaction history, and verification status.
+- **User Management**: Create and manage Admins and Kitchen Operators.
+- **Commodity Management**: Manage standard market prices and units.
+- **Kitchen Management**: Add, edit, and remove kitchen units.
+- **Settings**: Profile and password management.
 
 ## Tech Stack
 - **Framework**: React (Vite)

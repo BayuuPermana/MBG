@@ -4,20 +4,30 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useAuth } from '@/context/AuthContext';
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { login } = useAuth();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // TODO: Implement actual login logic
-    console.log('Login:', username, password);
-    if (username === 'admin') {
-      navigate('/dashboard');
-    } else {
-      navigate('/input');
+    setError('');
+    try {
+      const res = await axios.post('http://localhost:5000/api/auth/login', { username, password });
+      login(res.data);
+      if (res.data.role === 'admin') {
+        navigate('/dashboard');
+      } else {
+        navigate('/input');
+      }
+    } catch (err) {
+      console.error("Login failed:", err);
+      setError('Invalid username or password');
     }
   };
 
@@ -36,6 +46,7 @@ const LoginPage = () => {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
+            {error && <div className="text-red-500 text-sm text-center bg-red-100 p-2 rounded">{error}</div>}
             <div className="space-y-2">
               <Label htmlFor="username">Username</Label>
               <Input 

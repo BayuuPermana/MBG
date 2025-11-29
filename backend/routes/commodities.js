@@ -25,4 +25,14 @@ router.post('/', async (req, res) => {
     }
 });
 
+// DELETE COMMODITY
+router.delete('/:id', async (req, res) => {
+    try {
+        await Commodity.findByIdAndDelete(req.params.id);
+        res.status(200).json("Commodity has been deleted...");
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
 module.exports = router;

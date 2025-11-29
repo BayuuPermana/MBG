@@ -1,19 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FileText, Download, Filter, Calendar } from 'lucide-react';
+import axios from 'axios';
 
 const ReportsPage = () => {
-  const reports = [
-    { id: 'RPT-001', date: '2025-11-29', kitchen: 'Jakarta Selatan 01', total: 1500000, status: 'Verified' },
-    { id: 'RPT-002', date: '2025-11-28', kitchen: 'Jakarta Selatan 01', total: 1450000, status: 'Verified' },
-    { id: 'RPT-003', date: '2025-11-27', kitchen: 'Jakarta Selatan 01', total: 1600000, status: 'Pending' },
-  ];
+  const [reports, setReports] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchReports = async () => {
+      try {
+        const res = await axios.get('http://localhost:5000/api/reports');
+        setReports(res.data);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching reports:", err);
+        setLoading(false);
+      }
+    };
+    fetchReports();
+  }, []);
 
   return (
-    <div className="p-8 bg-slate-50 min-h-screen">
-      <div className="max-w-5xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
+    <div className="max-w-5xl mx-auto">
+      <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold text-slate-900">Laporan & SPJ</h1>
             <p className="text-slate-500">Riwayat laporan belanja dan status verifikasi.</p>
@@ -51,18 +62,20 @@ const ReportsPage = () => {
                 </thead>
                 <tbody className="[&_tr:last-child]:border-0">
                   {reports.map((report) => (
-                    <tr key={report.id} className="border-b transition-colors hover:bg-slate-50/50 data-[state=selected]:bg-slate-50">
-                      <td className="p-4 align-middle font-medium">{report.id}</td>
-                      <td className="p-4 align-middle">{report.date}</td>
-                      <td className="p-4 align-middle">{report.kitchen}</td>
-                      <td className="p-4 align-middle">Rp {report.total.toLocaleString('id-ID')}</td>
+                    <tr key={report._id} className="border-b transition-colors hover:bg-slate-50/50 data-[state=selected]:bg-slate-50">
+                      <td className="p-4 align-middle font-medium">{report._id.substring(0, 8)}...</td>
+                      <td className="p-4 align-middle">{new Date(report.date).toLocaleDateString('id-ID')}</td>
+                      <td className="p-4 align-middle">{report.kitchen?.name || 'Unknown'}</td>
+                      <td className="p-4 align-middle">Rp {report.totalExpenditure?.toLocaleString('id-ID') || 0}</td>
                       <td className="p-4 align-middle">
                         <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${
-                          report.status === 'Verified' 
+                          report.status === 'verified' 
                             ? 'bg-emerald-100 text-emerald-800' 
+                            : report.status === 'rejected'
+                            ? 'bg-red-100 text-red-800'
                             : 'bg-amber-100 text-amber-800'
                         }`}>
-                          {report.status}
+                          {report.status.charAt(0).toUpperCase() + report.status.slice(1)}
                         </span>
                       </td>
                       <td className="p-4 align-middle text-right">
@@ -73,13 +86,17 @@ const ReportsPage = () => {
                       </td>
                     </tr>
                   ))}
+                  {!loading && reports.length === 0 && (
+                    <tr>
+                      <td colSpan="6" className="p-4 text-center text-slate-500">Belum ada laporan.</td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
           </CardContent>
         </Card>
       </div>
-    </div>
   );
 };
 

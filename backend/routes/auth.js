@@ -26,7 +26,7 @@ router.post('/register', async (req, res) => {
 // LOGIN
 router.post('/login', async (req, res) => {
     try {
-        const user = await User.findOne({ username: req.body.username });
+        const user = await User.findOne({ username: req.body.username }).populate('kitchenId');
         !user && res.status(404).json("User not found");
 
         const validPassword = await bcrypt.compare(req.body.password, user.password);
@@ -40,6 +40,54 @@ router.post('/login', async (req, res) => {
 
         const { password, ...others } = user._doc;
         res.status(200).json({ ...others, accessToken });
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
+// GET ALL USERS
+router.get('/', async (req, res) => {
+    try {
+        const users = await User.find().populate('kitchenId', 'name');
+        const usersList = users.map(user => {
+            const { password, ...other } = user._doc;
+            return other;
+        });
+        res.status(200).json(usersList);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
+// DELETE USER
+router.delete('/:id', async (req, res) => {
+    try {
+        await User.findByIdAndDelete(req.params.id);
+        res.status(200).json("User has been deleted...");
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
+// UPDATE USER
+router.put('/:id', async (req, res) => {
+    if (req.body.password) {
+        try {
+            const salt = await bcrypt.genSalt(10);
+            req.body.password = await bcrypt.hash(req.body.password, salt);
+        } catch (err) {
+            return res.status(500).json(err);
+        }
+    }
+    try {
+        const updatedUser = await User.findByIdAndUpdate(
+            req.params.id,
+            {
+                $set: req.body,
+            },
+            { new: true }
+        );
+        res.status(200).json(updatedUser);
     } catch (err) {
         res.status(500).json(err);
     }

@@ -22,4 +22,14 @@ router.get('/', async (req, res) => {
     }
 });
 
+// DELETE KITCHEN
+router.delete('/:id', async (req, res) => {
+    try {
+        await Kitchen.findByIdAndDelete(req.params.id);
+        res.status(200).json("Kitchen has been deleted...");
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
 module.exports = router;

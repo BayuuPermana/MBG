@@ -6,6 +6,7 @@ GiziSync is a fullstack web application designed to manage the "Makan Bergizi Gr
 - **Frontend**: React (Vite), Tailwind CSS, Shadcn UI
 - **Backend**: Node.js, Express, MongoDB
 - **Language**: Indonesian (Bahasa Indonesia)
+- **Key Modules**: User Management, Kitchen Management, Commodity Pricing, Daily Reporting
 
 ## Project Structure
 - `/frontend`: The React client application.

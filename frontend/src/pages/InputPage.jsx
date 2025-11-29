@@ -1,23 +1,106 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Plus, Upload, Send, ShoppingCart, ArrowLeft } from 'lucide-react';
+import { Plus, Upload, Send, ShoppingCart, ArrowLeft, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useAuth } from '@/context/AuthContext';
 
 const InputPage = () => {
-  const [items, setItems] = useState([{ commodity: '', quantity: '', price: '' }]);
+  const { user } = useAuth();
   const navigate = useNavigate();
+  const [items, setItems] = useState([{ commodity: '', quantity: '', unit: 'kg', price: '' }]);
+  const [loading, setLoading] = useState(false);
+  const [commodities, setCommodities] = useState([]);
+
+  useEffect(() => {
+    const fetchCommodities = async () => {
+      try {
+        const res = await axios.get('http://localhost:5000/api/commodities');
+        setCommodities(res.data);
+      } catch (err) {
+        console.error("Error fetching commodities:", err);
+      }
+    };
+    fetchCommodities();
+  }, []);
 
   const handleAddItem = () => {
-    setItems([...items, { commodity: '', quantity: '', price: '' }]);
+    setItems([...items, { commodity: '', quantity: '', unit: 'kg', price: '' }]);
   };
 
-  const handleSubmit = (e) => {
+  const handleRemoveItem = (index) => {
+    const newItems = items.filter((_, i) => i !== index);
+    setItems(newItems);
+  };
+
+  const handleItemChange = (index, field, value) => {
+    const newItems = [...items];
+    newItems[index][field] = value;
+    
+    // Auto-fill unit if commodity changes
+    if (field === 'commodity') {
+      const selectedCommodity = commodities.find(c => c.name === value);
+      if (selectedCommodity) {
+        newItems[index].unit = selectedCommodity.unit;
+      }
+    }
+    
+    setItems(newItems);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Report Submitted:', items);
-    alert('Laporan Harian Berhasil Dikirim!');
+    setLoading(true);
+
+    // Calculate totals and format data
+    const formattedItems = items.map(item => ({
+      commodity: item.commodity,
+      quantity: parseFloat(item.quantity),
+      unit: item.unit,
+      pricePerUnit: parseFloat(item.price) / parseFloat(item.quantity),
+      totalPrice: parseFloat(item.price)
+    }));
+
+    const totalExpenditure = formattedItems.reduce((sum, item) => sum + item.totalPrice, 0);
+
+    // Get actual kitchen ID from logged in user
+    // Handle case where kitchenId is populated object or just ID string
+    const kitchenId = user?.kitchenId?._id || user?.kitchenId || "6568a7b0c4b5c6d7e8f9a0b1"; 
+
+    const payload = {
+      kitchen: kitchenId,
+      items: formattedItems,
+      totalExpenditure,
+      status: 'pending'
+    };
+
+    try {
+      await axios.post('http://localhost:5000/api/reports', payload);
+      alert('Laporan Harian Berhasil Dikirim!');
+      navigate('/reports'); // Or stay on page and clear form?
+      // For now, redirecting to reports page (which is likely where they want to see it)
+      // But wait, InputPage is for operators, ReportsPage might be admin only?
+      // If operator, maybe redirect to a "History" page or just clear form.
+      // Let's just clear form for now if we don't have a dedicated operator dashboard yet.
+      // Actually, user asked "where does data go?", implying they want to see it.
+      // If I redirect to /reports, they can see it if they have access.
+      // Operators might not have access to /reports if it's in the admin sidebar.
+      // But for now, let's assume they can view it or we redirect to home.
+      if (user?.role === 'admin') {
+          navigate('/reports');
+      } else {
+          // If operator, maybe just show success and clear?
+          setItems([{ commodity: '', quantity: '', unit: 'kg', price: '' }]);
+      }
+    } catch (error) {
+      console.error('Error submitting report:', error);
+      alert('Gagal mengirim laporan. Silakan coba lagi.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -28,13 +111,13 @@ const InputPage = () => {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
-            <h1 className="text-xl font-bold text-slate-900">Dapur Umum: Jakarta Selatan 01</h1>
-            <p className="text-xs text-slate-500">Operator: Budi Santoso</p>
+            <h1 className="text-xl font-bold text-slate-900">Dapur Umum: {user?.kitchenId?.name || 'Jakarta Selatan 01'}</h1>
+            <p className="text-xs text-slate-500">Operator: {user?.username || 'Budi Santoso'}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
           <div className="text-right hidden sm:block">
-            <p className="text-sm font-medium">Jumat, 29 Nov 2025</p>
+            <p className="text-sm font-medium">{new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' })}</p>
             <p className="text-xs text-slate-500">Laporan Harian</p>
           </div>
         </div>
@@ -60,18 +143,60 @@ const InputPage = () => {
               <div className="space-y-4">
                 {items.map((item, index) => (
                   <div key={index} className="p-4 bg-slate-50 rounded-xl border border-slate-200 relative group hover:border-indigo-200 transition-colors">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="space-y-2">
+                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Button type="button" variant="ghost" size="sm" className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50" onClick={() => handleRemoveItem(index)}>
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+                      <div className="md:col-span-4 space-y-2">
                         <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Komoditas</Label>
-                        <Input placeholder="Contoh: Beras" className="bg-white" />
+                        <select 
+                          className="flex h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                          value={item.commodity}
+                          onChange={(e) => handleItemChange(index, 'commodity', e.target.value)}
+                          required
+                        >
+                          <option value="">Pilih Komoditas</option>
+                          {commodities.map(c => (
+                            <option key={c._id} value={c.name}>{c.name}</option>
+                          ))}
+                        </select>
                       </div>
-                      <div className="space-y-2">
-                        <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Jumlah (kg/ltr)</Label>
-                        <Input type="number" placeholder="0" className="bg-white" />
+                      <div className="md:col-span-3 space-y-2">
+                        <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Jumlah</Label>
+                        <div className="flex gap-2">
+                          <Input 
+                            type="number" 
+                            placeholder="0" 
+                            className="bg-white" 
+                            value={item.quantity}
+                            onChange={(e) => handleItemChange(index, 'quantity', e.target.value)}
+                            required
+                          />
+                        </div>
                       </div>
-                      <div className="space-y-2">
+                      <div className="md:col-span-2 space-y-2">
+                        <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Satuan</Label>
+                        <Input 
+                            placeholder="kg" 
+                            className="bg-white" 
+                            value={item.unit}
+                            onChange={(e) => handleItemChange(index, 'unit', e.target.value)}
+                            required
+                            readOnly // Make read-only as it's auto-filled
+                          />
+                      </div>
+                      <div className="md:col-span-3 space-y-2">
                         <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Harga Total (Rp)</Label>
-                        <Input type="number" placeholder="0" className="bg-white" />
+                        <Input 
+                          type="number" 
+                          placeholder="0" 
+                          className="bg-white" 
+                          value={item.price}
+                          onChange={(e) => handleItemChange(index, 'price', e.target.value)}
+                          required
+                        />
                       </div>
                     </div>
                   </div>
@@ -96,8 +221,8 @@ const InputPage = () => {
               </div>
 
               <div className="pt-4 border-t border-slate-100">
-                <Button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-6 text-lg shadow-lg hover:shadow-indigo-500/30 transition-all">
-                  <Send className="mr-2 h-5 w-5" /> Kirim Laporan
+                <Button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-6 text-lg shadow-lg hover:shadow-indigo-500/30 transition-all" disabled={loading}>
+                  <Send className="mr-2 h-5 w-5" /> {loading ? 'Mengirim...' : 'Kirim Laporan'}
                 </Button>
               </div>
             </form>

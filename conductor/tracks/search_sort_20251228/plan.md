@@ -2,7 +2,7 @@
 
 ## Phase 1: Backend API Implementation
 
-- [ ] Task: Update `GET /api/users` for search and sort
+- [x] Task: Update `GET /api/users` for search and sort 690e039
     - [ ] Subtask: Write integration test for searching users by username and sorting
     - [ ] Subtask: Implement search (regex) and sort logic in `backend/routes/auth.js` (or users.js)
 

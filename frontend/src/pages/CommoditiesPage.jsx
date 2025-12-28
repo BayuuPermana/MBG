@@ -5,27 +5,48 @@ import { Plus } from 'lucide-react';
 import { fetchCommodities, createCommodity, updateCommodity } from '../lib/api/commodities';
 import CommodityTable from '../components/CommodityTable';
 import CommodityForm from '../components/CommodityForm';
+import SearchBar from '../components/SearchBar';
 
 const CommoditiesPage = () => {
   const [commodities, setCommodities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedCommodity, setSelectedCommodity] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
 
   useEffect(() => {
     loadCommodities();
-  }, []);
+  }, [searchQuery, sortConfig]);
 
   const loadCommodities = async () => {
     try {
       setLoading(true);
-      const data = await fetchCommodities();
+      const params = {};
+      if (searchQuery) params.q = searchQuery;
+      if (sortConfig.key) {
+        params.sortBy = sortConfig.key;
+        params.order = sortConfig.direction;
+      }
+      const data = await fetchCommodities(params);
       setCommodities(data);
     } catch (err) {
       console.error("Error fetching commodities:", err);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+  };
+
+  const handleSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
   };
 
   const handleAdd = () => {
@@ -71,6 +92,10 @@ const CommoditiesPage = () => {
         </Button>
       </div>
 
+      <div className="mb-6 w-full max-w-sm">
+        <SearchBar onSearch={handleSearch} placeholder="Cari komoditas..." />
+      </div>
+
       <Card className="border-slate-200 shadow-sm overflow-hidden">
         <CardHeader className="bg-slate-50/50 border-b">
           <CardTitle className="text-xl">Daftar Komoditas</CardTitle>
@@ -84,6 +109,8 @@ const CommoditiesPage = () => {
               commodities={commodities} 
               onEdit={handleEdit} 
               onViewHistory={handleViewHistory} 
+              onSort={handleSort}
+              sortConfig={sortConfig}
             />
           )}
         </CardContent>

@@ -21,8 +21,15 @@ router.get('/stats', verifyToken, async (req, res) => {
 
         // 1. Price Trends (Daily Avg for common items)
         const trendsRaw = await Report.aggregate([
-            { $match: { date: { $gte: lastWeek } } },
+            // Optimization: Filter reports that contain the commodity BEFORE unwinding
+            {
+                $match: {
+                    date: { $gte: lastWeek },
+                    "items.commodity": { $regex: /beras|telur|rice|egg/i }
+                }
+            },
             { $unwind: "$items" },
+            // Filter specific items after unwind
             { $match: { "items.commodity": { $regex: /beras|telur|rice|egg/i } } },
             {
                 $group: {
@@ -99,7 +106,7 @@ router.get('/', verifyToken, async (req, res) => {
         }
 
         const reports = await Report.find(query)
-            .populate('kitchen')
+            .populate('kitchen', 'name') // Optimization: Only fetch kitchen name
             .sort(sortOptions)
             .lean();
             

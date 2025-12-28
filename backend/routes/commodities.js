@@ -5,7 +5,12 @@ const { verifyToken, verifyTokenAndAdmin } = require('../middleware/auth');
 // GET ALL COMMODITIES
 router.get('/', verifyToken, async (req, res) => {
     try {
-        const commodities = await Commodity.find();
+        const { region, category } = req.query;
+        let query = {};
+        if (region) query.region = region;
+        if (category) query.category = category;
+
+        const commodities = await Commodity.find(query);
         res.status(200).json(commodities);
     } catch (err) {
         res.status(500).json(err);

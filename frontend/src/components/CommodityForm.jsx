@@ -62,7 +62,7 @@ const CommodityForm = ({ isOpen, onClose, onSave, commodity }) => {
         </DialogHeader>
         <form onSubmit={handleSubmit} className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
+            <Label htmlFor="name" className="text-right font-extrabold text-black text-base">
               Nama
             </Label>
             <Input
@@ -70,12 +70,12 @@ const CommodityForm = ({ isOpen, onClose, onSave, commodity }) => {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="col-span-3"
+              className="col-span-3 border-slate-300 focus:border-indigo-500"
               required
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="category" className="text-right">
+            <Label htmlFor="category" className="text-right font-extrabold text-black text-base">
               Kategori
             </Label>
             <Input
@@ -83,12 +83,12 @@ const CommodityForm = ({ isOpen, onClose, onSave, commodity }) => {
               name="category"
               value={formData.category}
               onChange={handleChange}
-              className="col-span-3"
+              className="col-span-3 border-slate-300 focus:border-indigo-500"
               required
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="region" className="text-right">
+            <Label htmlFor="region" className="text-right font-extrabold text-black text-base">
               Wilayah
             </Label>
             <Input
@@ -96,12 +96,12 @@ const CommodityForm = ({ isOpen, onClose, onSave, commodity }) => {
               name="region"
               value={formData.region}
               onChange={handleChange}
-              className="col-span-3"
+              className="col-span-3 border-slate-300 focus:border-indigo-500"
               required
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="unit" className="text-right">
+            <Label htmlFor="unit" className="text-right font-extrabold text-black text-base">
               Satuan
             </Label>
             <Input
@@ -110,12 +110,12 @@ const CommodityForm = ({ isOpen, onClose, onSave, commodity }) => {
               placeholder="kg, liter, dll"
               value={formData.unit}
               onChange={handleChange}
-              className="col-span-3"
+              className="col-span-3 border-slate-300 focus:border-indigo-500"
               required
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="price" className="text-right">
+            <Label htmlFor="price" className="text-right font-extrabold text-black text-base">
               Harga
             </Label>
             <Input
@@ -124,7 +124,7 @@ const CommodityForm = ({ isOpen, onClose, onSave, commodity }) => {
               type="number"
               value={formData.price}
               onChange={handleChange}
-              className="col-span-3"
+              className="col-span-3 border-slate-300 focus:border-indigo-500"
               required
             />
           </div>

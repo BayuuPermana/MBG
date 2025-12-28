@@ -28,11 +28,11 @@ const CommodityTable = ({ commodities, onEdit, onViewHistory }) => {
           {commodities.map((item) => (
             <TableRow key={item._id}>
               <TableCell className="font-medium">{item.name}</TableCell>
-              <TableCell>{item.category}</TableCell>
-              <TableCell>{item.region}</TableCell>
-              <TableCell>{item.unit}</TableCell>
+              <TableCell>{item.category || '-'}</TableCell>
+              <TableCell>{item.region || '-'}</TableCell>
+              <TableCell>{item.unit || '-'}</TableCell>
               <TableCell className="text-right">
-                {new Intl.NumberFormat('id-ID').format(item.price)}
+                {new Intl.NumberFormat('id-ID').format(item.price || item.averagePrice || 0)}
               </TableCell>
               <TableCell className="text-center">
                 <div className="flex justify-center gap-2">

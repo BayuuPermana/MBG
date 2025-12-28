@@ -49,7 +49,8 @@ const CommoditiesPage = () => {
       loadCommodities();
     } catch (err) {
       console.error("Error saving commodity:", err);
-      alert("Gagal menyimpan komoditas");
+      const errorMessage = err.response?.data?.message || err.response?.data || "Gagal menyimpan komoditas";
+      alert(typeof errorMessage === 'string' ? errorMessage : JSON.stringify(errorMessage));
     }
   };
 

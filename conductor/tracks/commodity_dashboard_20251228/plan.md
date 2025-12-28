@@ -6,7 +6,7 @@
     - [ ] Subtask: Write tests for Commodity schema validation (required fields, types)
     - [ ] Subtask: Implement Commodity schema in `backend/models/Commodity.js`
 
-- [ ] Task: Implement `POST /api/commodities` endpoint
+- [x] Task: Implement `POST /api/commodities` endpoint 3dab91b
     - [ ] Subtask: Write integration test for creating a new commodity (success and validation error cases)
     - [ ] Subtask: Implement controller and route for commodity creation
 

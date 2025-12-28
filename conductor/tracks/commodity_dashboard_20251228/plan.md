@@ -10,7 +10,7 @@
     - [ ] Subtask: Write integration test for creating a new commodity (success and validation error cases)
     - [ ] Subtask: Implement controller and route for commodity creation
 
-- [ ] Task: Implement `GET /api/commodities` endpoint with filtering
+- [x] Task: Implement `GET /api/commodities` endpoint with filtering f7e2592
     - [ ] Subtask: Write integration test for fetching commodities (all and filtered by region/category)
     - [ ] Subtask: Implement controller and route for fetching commodities
 

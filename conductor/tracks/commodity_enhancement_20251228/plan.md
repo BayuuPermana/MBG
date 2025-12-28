@@ -9,7 +9,7 @@
 
 ## Phase 2: UI Enhancement
 
-- [ ] Task: Add Summary Statistics to CommoditiesPage
+- [x] Task: Add Summary Statistics to CommoditiesPage b82c0e7
     - [ ] Subtask: Implement `StatCards` component
     - [ ] Subtask: Integrate `StatCards` into `CommoditiesPage.jsx`
 

@@ -213,10 +213,24 @@ const UsersPage = () => {
                     {user.role === 'admin' ? <Shield className="h-6 w-6" /> : <User className="h-6 w-6" />}
                   </div>
                   <div className="flex gap-1">
-                      <Button variant="ghost" size="icon" className="text-slate-400 hover:text-indigo-500" onClick={() => handleEdit(user)}>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-slate-400 hover:text-indigo-500"
+                        onClick={() => handleEdit(user)}
+                        title="Ubah Pengguna"
+                        aria-label="Ubah Pengguna"
+                      >
                           <User className="h-4 w-4" />
                       </Button>
-                      <Button variant="ghost" size="icon" className="text-slate-400 hover:text-red-500" onClick={() => handleDelete(user._id)}>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-slate-400 hover:text-red-500"
+                        onClick={() => handleDelete(user._id)}
+                        title="Hapus Pengguna"
+                        aria-label="Hapus Pengguna"
+                      >
                           <Trash2 className="h-4 w-4" />
                       </Button>
                   </div>

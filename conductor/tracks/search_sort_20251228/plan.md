@@ -30,7 +30,7 @@
     - [ ] Subtask: Add `onSort` props and visual indicators to headers
     - [ ] Subtask: Refactor `CommodityTable.jsx`
 
-- [ ] Task: Integrate Search/Sort into CommoditiesPage
+- [x] Task: Integrate Search/Sort into CommoditiesPage c316937
     - [ ] Subtask: Update API calls to include `q`, `sortBy`, `order`
     - [ ] Subtask: Manage state in `CommoditiesPage.jsx`
 

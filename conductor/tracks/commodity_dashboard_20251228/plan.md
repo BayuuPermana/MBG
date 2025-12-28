@@ -34,7 +34,7 @@
     - [ ] Subtask: Write component test for form validation and submission
     - [ ] Subtask: Implement `CommodityForm.jsx` using Shadcn UI Dialog and Form
 
-- [ ] Task: Integrate components into Dashboard Page
+- [x] Task: Integrate components into Dashboard Page dff5e45
     - [ ] Subtask: Implement `CommoditiesPage.jsx` and wire up state/data fetching
     - [ ] Subtask: Add navigation link to Sidebar
 

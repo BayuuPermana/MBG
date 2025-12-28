@@ -81,7 +81,30 @@ router.get('/stats', verifyToken, async (req, res) => {
 // GET ALL REPORTS (For Dashboard)
 router.get('/', verifyToken, async (req, res) => {
     try {
-        const reports = await Report.find().populate('kitchen');
+        const { q, status, sortBy, order } = req.query;
+        let query = {};
+
+        if (status) {
+            query.status = status;
+        }
+
+        // If searching by kitchen name (q), we need to find matching kitchens first
+        if (q) {
+            const Kitchen = require('../models/Kitchen');
+            const matchingKitchens = await Kitchen.find({ name: { $regex: q, $options: 'i' } }).select('_id');
+            const kitchenIds = matchingKitchens.map(k => k._id);
+            query.kitchen = { $in: kitchenIds };
+        }
+
+        let sortOptions = {};
+        if (sortBy) {
+            sortOptions[sortBy] = order === 'desc' ? -1 : 1;
+        }
+
+        const reports = await Report.find(query)
+            .populate('kitchen')
+            .sort(sortOptions);
+            
         res.status(200).json(reports);
     } catch (err) {
         res.status(500).json(err);

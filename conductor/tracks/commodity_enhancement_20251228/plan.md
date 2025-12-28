@@ -13,7 +13,7 @@
     - [ ] Subtask: Implement `StatCards` component
     - [ ] Subtask: Integrate `StatCards` into `CommoditiesPage.jsx`
 
-- [ ] Task: Refine CommodityTable and Page Layout
+- [x] Task: Refine CommodityTable and Page Layout d40ba52
     - [ ] Subtask: Add badges for categories (colors based on type)
     - [ ] Subtask: Improve spacing and visual hierarchy of the header section
 

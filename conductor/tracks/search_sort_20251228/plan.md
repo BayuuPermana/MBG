@@ -22,7 +22,7 @@
 
 ## Phase 2: Frontend Components & Integration
 
-- [ ] Task: Create Reusable SearchBar Component
+- [x] Task: Create Reusable SearchBar Component 887d622
     - [ ] Subtask: Implement `SearchBar.jsx` with debounce
     - [ ] Subtask: Write component test
 

@@ -30,7 +30,7 @@
     - [ ] Subtask: Write component test for rendering table with mock data
     - [ ] Subtask: Implement `CommodityTable.jsx` using Shadcn UI Table
 
-- [ ] Task: Build Add/Edit Commodity Modal
+- [x] Task: Build Add/Edit Commodity Modal af6c0ff
     - [ ] Subtask: Write component test for form validation and submission
     - [ ] Subtask: Implement `CommodityForm.jsx` using Shadcn UI Dialog and Form
 

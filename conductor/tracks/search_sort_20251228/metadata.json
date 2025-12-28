@@ -1,0 +1,8 @@
+{
+  "track_id": "search_sort_20251228",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2025-12-28T12:45:00Z",
+  "updated_at": "2025-12-28T12:45:00Z",
+  "description": "Add search function and sorting for Kitchens, Commodities, Users, and Reports pages."
+}

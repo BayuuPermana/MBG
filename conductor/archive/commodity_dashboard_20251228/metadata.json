@@ -1,0 +1,8 @@
+{
+  "track_id": "commodity_dashboard_20251228",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2025-12-28T12:00:00Z",
+  "updated_at": "2025-12-28T12:00:00Z",
+  "description": "Implement a centralized Commodity Pricing Dashboard for BGN Administrators to manage regional food costs."
+}

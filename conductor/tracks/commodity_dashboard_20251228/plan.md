@@ -14,7 +14,7 @@
     - [ ] Subtask: Write integration test for fetching commodities (all and filtered by region/category)
     - [ ] Subtask: Implement controller and route for fetching commodities
 
-- [ ] Task: Implement `PUT /api/commodities/:id` endpoint
+- [x] Task: Implement `PUT /api/commodities/:id` endpoint eb5a69c
     - [ ] Subtask: Write integration test for updating commodity price and tracking history
     - [ ] Subtask: Implement controller and route for updating commodity
 

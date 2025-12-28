@@ -79,16 +79,28 @@ describe('Commodity API', () => {
             expect(res.body[0].region).toBe('Sumatra');
         });
     
-            it('should filter by category', async () => {
-                const res = await request(app).get('/api/commodities?category=Protein');
-                expect(res.status).toBe(200);
-                expect(res.body.length).toBe(1);
-                expect(res.body[0].category).toBe('Protein');
+                it('should filter by category', async () => {
+                    const res = await request(app).get('/api/commodities?category=Protein');
+                    expect(res.status).toBe(200);
+                    expect(res.body.length).toBe(1);
+                    expect(res.body[0].category).toBe('Protein');
+                });
+            
+                it('should search commodities by name', async () => {
+                    const res = await request(app).get('/api/commodities?q=Ric');
+                    expect(res.status).toBe(200);
+                    expect(res.body.length).toBe(2); // Rice (Java) and Rice (Sumatra)
+                });
+            
+                it('should sort commodities by price desc', async () => {
+                    const res = await request(app).get('/api/commodities?sortBy=price&order=desc');
+                    expect(res.status).toBe(200);
+                    expect(res.body[0].price).toBe(30000); // Chicken
+                    expect(res.body[2].price).toBe(10000); // Rice
+                });
             });
-        });
-        
-        describe('PUT /api/commodities/:id', () => {
-            let commodityId;
+            
+            describe('PUT /api/commodities/:id', () => {            let commodityId;
         
             beforeAll(async () => {
                 const commodity = await Commodity.create({

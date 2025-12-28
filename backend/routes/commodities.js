@@ -5,12 +5,18 @@ const { verifyToken, verifyTokenAndAdmin } = require('../middleware/auth');
 // GET ALL COMMODITIES
 router.get('/', verifyToken, async (req, res) => {
     try {
-        const { region, category } = req.query;
+        const { region, category, q, sortBy, order } = req.query;
         let query = {};
         if (region) query.region = region;
         if (category) query.category = category;
+        if (q) query.name = { $regex: q, $options: 'i' };
 
-        const commodities = await Commodity.find(query);
+        let sortOptions = {};
+        if (sortBy) {
+            sortOptions[sortBy] = order === 'desc' ? -1 : 1;
+        }
+
+        const commodities = await Commodity.find(query).sort(sortOptions);
         res.status(200).json(commodities);
     } catch (err) {
         res.status(500).json(err);
@@ -47,9 +53,12 @@ router.put('/:id', verifyTokenAndAdmin, async (req, res) => {
         const commodity = await Commodity.findById(req.params.id);
         if (!commodity) return res.status(404).json("Commodity not found");
 
-        if (req.body.price && req.body.price !== commodity.price) {
+        // Handle legacy data where price might be stored as averagePrice
+        const currentPrice = commodity.price || commodity._doc.averagePrice || 0;
+
+        if (req.body.price && Number(req.body.price) !== currentPrice) {
             commodity.history.push({
-                price: commodity.price,
+                price: currentPrice,
                 date: Date.now(),
                 updatedBy: req.user ? req.user.username : 'Admin'
             });

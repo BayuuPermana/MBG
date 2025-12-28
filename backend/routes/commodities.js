@@ -44,13 +44,25 @@ router.delete('/:id', verifyTokenAndAdmin, async (req, res) => {
 // UPDATE COMMODITY
 router.put('/:id', verifyTokenAndAdmin, async (req, res) => {
     try {
-        const updatedCommodity = await Commodity.findByIdAndUpdate(
-            req.params.id,
-            { $set: req.body },
-            { new: true }
-        );
+        const commodity = await Commodity.findById(req.params.id);
+        if (!commodity) return res.status(404).json("Commodity not found");
+
+        if (req.body.price && req.body.price !== commodity.price) {
+            commodity.history.push({
+                price: commodity.price,
+                date: Date.now(),
+                updatedBy: req.user ? req.user.username : 'Admin'
+            });
+        }
+
+        Object.assign(commodity, req.body);
+        
+        const updatedCommodity = await commodity.save();
         res.status(200).json(updatedCommodity);
     } catch (err) {
+        if (err.name === 'ValidationError') {
+            return res.status(400).json(err);
+        }
         res.status(500).json(err);
     }
 });

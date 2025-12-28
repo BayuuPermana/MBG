@@ -10,7 +10,7 @@ router.post('/register', async (req, res) => {
         const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
         const newUser = new User({
-            username: req.body.username,
+            username: req.body.username.toLowerCase(),
             password: hashedPassword,
             role: req.body.role,
             kitchenId: req.body.kitchenId
@@ -26,21 +26,30 @@ router.post('/register', async (req, res) => {
 // LOGIN
 router.post('/login', async (req, res) => {
     try {
-        const user = await User.findOne({ username: req.body.username }).populate('kitchenId');
-        if (!user) return res.status(404).json("User not found");
+        console.log('Login attempt:', req.body.username);
+        const user = await User.findOne({ username: req.body.username.toLowerCase() }).populate('kitchenId');
+        if (!user) {
+            console.log('User not found:', req.body.username);
+            return res.status(404).json("User not found");
+        }
 
         const validPassword = await bcrypt.compare(req.body.password, user.password);
-        if (!validPassword) return res.status(400).json("Wrong password");
+        if (!validPassword) {
+            console.log('Wrong password for user:', req.body.username);
+            return res.status(400).json("Wrong password");
+        }
 
         const accessToken = jwt.sign(
             { id: user._id, role: user.role, kitchenId: user.kitchenId },
-            process.env.JWT_SECRET,
+            process.env.JWT_SECRET || 'fallback_secret',
             { expiresIn: "3d" }
         );
 
         const { password, ...others } = user._doc;
+        console.log('Login success for user:', req.body.username);
         res.status(200).json({ ...others, accessToken });
     } catch (err) {
+        console.error('Login error:', err);
         res.status(500).json(err);
     }
 });

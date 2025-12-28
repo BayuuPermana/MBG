@@ -2,7 +2,7 @@
 
 ## Phase 1: Backend Implementation
 
-- [ ] Task: Create Mongoose model for Commodity
+- [x] Task: Create Mongoose model for Commodity 23ef55c
     - [ ] Subtask: Write tests for Commodity schema validation (required fields, types)
     - [ ] Subtask: Implement Commodity schema in `backend/models/Commodity.js`
 

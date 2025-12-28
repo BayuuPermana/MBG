@@ -20,7 +20,6 @@ router.get('/stats', verifyToken, async (req, res) => {
         const lastWeek = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
 
         // 1. Price Trends (Daily Avg for common items)
-        // Note: Matches "Beras" or "Telur" case-insensitive
         const trendsRaw = await Report.aggregate([
             { $match: { date: { $gte: lastWeek } } },
             { $unwind: "$items" },
@@ -37,17 +36,16 @@ router.get('/stats', verifyToken, async (req, res) => {
             { $sort: { "_id.date": 1 } }
         ]);
 
-        // Transform for Frontend: { "2023-10-01": { date: "...", Beras: 12000, Telur: 24000 } }
         const trendsMap = {};
         trendsRaw.forEach(t => {
             const date = t._id.date;
-            const name = t._id.commodity; // Simplified for now, might need normalization
+            const name = t._id.commodity;
             if (!trendsMap[date]) trendsMap[date] = { date };
             trendsMap[date][name] = t.avgPrice;
         });
         const trends = Object.values(trendsMap).sort((a, b) => new Date(a.date) - new Date(b.date));
 
-        // 2. Regional Stats (Latest report per kitchen)
+        // 2. Regional Stats
         const kitchenStats = await Report.aggregate([
             { $sort: { date: -1 } },
             {
@@ -88,7 +86,6 @@ router.get('/', verifyToken, async (req, res) => {
             query.status = status;
         }
 
-        // If searching by kitchen name (q), we need to find matching kitchens first
         if (q) {
             const Kitchen = require('../models/Kitchen');
             const matchingKitchens = await Kitchen.find({ name: { $regex: q, $options: 'i' } }).select('_id');
@@ -103,7 +100,8 @@ router.get('/', verifyToken, async (req, res) => {
 
         const reports = await Report.find(query)
             .populate('kitchen')
-            .sort(sortOptions);
+            .sort(sortOptions)
+            .lean();
             
         res.status(200).json(reports);
     } catch (err) {
@@ -114,7 +112,7 @@ router.get('/', verifyToken, async (req, res) => {
 // GET REPORTS BY KITCHEN
 router.get('/kitchen/:kitchenId', verifyToken, async (req, res) => {
     try {
-        const reports = await Report.find({ kitchen: req.params.kitchenId });
+        const reports = await Report.find({ kitchen: req.params.kitchenId }).lean();
         res.status(200).json(reports);
     } catch (err) {
         res.status(500).json(err);

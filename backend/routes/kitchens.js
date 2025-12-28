@@ -33,7 +33,7 @@ router.get('/', verifyToken, async (req, res) => {
             sortOptions[sortBy] = order === 'desc' ? -1 : 1;
         }
 
-        const kitchens = await Kitchen.find(query).sort(sortOptions);
+        const kitchens = await Kitchen.find(query).sort(sortOptions).lean();
         res.status(200).json(kitchens);
     } catch (err) {
         res.status(500).json(err);

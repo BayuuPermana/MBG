@@ -8,19 +8,40 @@ import {
   TableRow,
 } from './ui/table';
 import { Button } from './ui/button';
-import { Pencil, History } from 'lucide-react';
+import { Pencil, History, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 
-const CommodityTable = ({ commodities, onEdit, onViewHistory }) => {
+const CommodityTable = ({ commodities, onEdit, onViewHistory, onSort, sortConfig }) => {
+  const getSortIcon = (key) => {
+    if (sortConfig?.key === key) {
+      return sortConfig.direction === 'asc' ? <ArrowUp className="ml-2 h-4 w-4" /> : <ArrowDown className="ml-2 h-4 w-4" />;
+    }
+    return <ArrowUpDown className="ml-2 h-4 w-4" />;
+  };
+
+  const SortableHead = ({ label, sortKey, align = "text-left" }) => (
+    <TableHead className={align}>
+      <Button variant="ghost" onClick={() => onSort(sortKey)} className="-ml-4 h-8 data-[state=open]:bg-accent">
+        {label}
+        {getSortIcon(sortKey)}
+      </Button>
+    </TableHead>
+  );
+
   return (
     <div className="rounded-md border">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Nama</TableHead>
-            <TableHead>Kategori</TableHead>
-            <TableHead>Wilayah</TableHead>
+            <SortableHead label="Nama" sortKey="name" />
+            <SortableHead label="Kategori" sortKey="category" />
+            <SortableHead label="Wilayah" sortKey="region" />
             <TableHead>Satuan</TableHead>
-            <TableHead className="text-right">Harga (Rp)</TableHead>
+            <TableHead className="text-right">
+                <Button variant="ghost" onClick={() => onSort('price')} className="-mr-4 h-8">
+                    Harga (Rp)
+                    {getSortIcon('price')}
+                </Button>
+            </TableHead>
             <TableHead className="text-center">Aksi</TableHead>
           </TableRow>
         </TableHeader>

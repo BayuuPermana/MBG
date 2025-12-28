@@ -4,5 +4,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-## [ ] Track: Implement Search and Sorting for Key Modules
+## [~] Track: Implement Search and Sorting for Key Modules
 *Link: [./conductor/tracks/search_sort_20251228/](./conductor/tracks/search_sort_20251228/)*

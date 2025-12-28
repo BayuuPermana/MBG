@@ -6,7 +6,7 @@
     - [ ] Subtask: Write integration test for searching users by username and sorting
     - [ ] Subtask: Implement search (regex) and sort logic in `backend/routes/auth.js` (or users.js)
 
-- [ ] Task: Update `GET /api/commodities` for search and sort
+- [x] Task: Update `GET /api/commodities` for search and sort 6cb5a94
     - [ ] Subtask: Write integration test for searching commodities by name and sorting by price
     - [ ] Subtask: Implement search and sort logic in `backend/routes/commodities.js`
 

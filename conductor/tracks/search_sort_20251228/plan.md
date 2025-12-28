@@ -14,7 +14,7 @@
     - [ ] Subtask: Write integration test for searching kitchens
     - [ ] Subtask: Implement search and sort logic in `backend/routes/kitchens.js`
 
-- [ ] Task: Update `GET /api/reports` for search and sort
+- [x] Task: Update `GET /api/reports` for search and sort 10dc373
     - [ ] Subtask: Write integration test for searching/sorting reports
     - [ ] Subtask: Implement logic in `backend/routes/reports.js`
 

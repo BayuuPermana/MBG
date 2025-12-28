@@ -10,7 +10,7 @@
     - [ ] Subtask: Write integration test for searching commodities by name and sorting by price
     - [ ] Subtask: Implement search and sort logic in `backend/routes/commodities.js`
 
-- [ ] Task: Update `GET /api/kitchens` for search and sort
+- [x] Task: Update `GET /api/kitchens` for search and sort a6c5aab
     - [ ] Subtask: Write integration test for searching kitchens
     - [ ] Subtask: Implement search and sort logic in `backend/routes/kitchens.js`
 

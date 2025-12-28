@@ -16,7 +16,24 @@ router.post('/', verifyTokenAndAdmin, async (req, res) => {
 // GET ALL KITCHENS
 router.get('/', verifyToken, async (req, res) => {
     try {
-        const kitchens = await Kitchen.find();
+        const { q, sortBy, order } = req.query;
+        let query = {};
+        
+        if (q) {
+            query.$or = [
+                { name: { $regex: q, $options: 'i' } },
+                { 'location.address': { $regex: q, $options: 'i' } },
+                { 'location.city': { $regex: q, $options: 'i' } },
+                { 'location.province': { $regex: q, $options: 'i' } }
+            ];
+        }
+
+        let sortOptions = {};
+        if (sortBy) {
+            sortOptions[sortBy] = order === 'desc' ? -1 : 1;
+        }
+
+        const kitchens = await Kitchen.find(query).sort(sortOptions);
         res.status(200).json(kitchens);
     } catch (err) {
         res.status(500).json(err);

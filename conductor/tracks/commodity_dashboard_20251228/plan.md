@@ -1,6 +1,6 @@
 # Plan: Commodity Pricing Dashboard
 
-## Phase 1: Backend Implementation
+## Phase 1: Backend Implementation [checkpoint: 6e33454]
 
 - [x] Task: Create Mongoose model for Commodity 23ef55c
     - [ ] Subtask: Write tests for Commodity schema validation (required fields, types)

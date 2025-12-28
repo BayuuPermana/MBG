@@ -20,25 +20,27 @@
 
 - [x] Task: Conductor - User Manual Verification 'Backend API Implementation' (Protocol in workflow.md) 3e19a4b
 
-## Phase 2: Frontend Components & Integration
+## Phase 2: Frontend Components & Integration [checkpoint: ac8a22b]
 
 - [x] Task: Create Reusable SearchBar Component 887d622
-    - [ ] Subtask: Implement `SearchBar.jsx` with debounce
-    - [ ] Subtask: Write component test
+    - [x] Subtask: Implement `SearchBar.jsx` with debounce
+    - [x] Subtask: Write component test
 
 - [x] Task: Update CommodityTable to support Sorting 5365ed1
-    - [ ] Subtask: Add `onSort` props and visual indicators to headers
-    - [ ] Subtask: Refactor `CommodityTable.jsx`
+    - [x] Subtask: Add `onSort` props and visual indicators to headers
+    - [x] Subtask: Refactor `CommodityTable.jsx`
 
 - [x] Task: Integrate Search/Sort into CommoditiesPage c316937
-    - [ ] Subtask: Update API calls to include `q`, `sortBy`, `order`
-    - [ ] Subtask: Manage state in `CommoditiesPage.jsx`
+    - [x] Subtask: Update API calls to include `q`, `sortBy`, `order`
+    - [x] Subtask: Manage state in `CommoditiesPage.jsx`
 
-- [x] Task: Implement Search/Sort for UsersPage
-- [x] Task: Implement Search/Sort for KitchensPage
-    - [ ] Subtask: Integrate SearchBar and Sort logic into KitchensPage
+- [x] Task: Implement Search/Sort for UsersPage ac8a22b
+    - [x] Subtask: Integrate SearchBar and Sort logic into UsersPage
 
-- [~] Task: Implement Search/Sort for ReportsPage
-    - [ ] Subtask: Integrate SearchBar and Sort logic into ReportsPage
+- [x] Task: Implement Search/Sort for KitchensPage ac8a22b
+    - [x] Subtask: Integrate SearchBar and Sort logic into KitchensPage
 
-- [ ] Task: Conductor - User Manual Verification 'Frontend Components & Integration' (Protocol in workflow.md)
+- [x] Task: Implement Search/Sort for ReportsPage ac8a22b
+    - [x] Subtask: Integrate SearchBar and Sort logic into ReportsPage
+
+- [x] Task: Conductor - User Manual Verification 'Frontend Components & Integration' (Protocol in workflow.md) ac8a22b

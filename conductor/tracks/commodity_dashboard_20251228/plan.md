@@ -22,7 +22,7 @@
 
 ## Phase 2: Frontend Integration
 
-- [ ] Task: Setup Commodity API client
+- [x] Task: Setup Commodity API client 5e493ff
     - [ ] Subtask: Write unit tests for axios wrapper functions (`fetchCommodities`, `createCommodity`, `updateCommodity`)
     - [ ] Subtask: Implement API service functions in `frontend/src/lib/api/commodities.js`
 

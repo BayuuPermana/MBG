@@ -3,8 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Plus, Trash2, User, Shield } from 'lucide-react';
+import { Plus, Trash2, User, Shield, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import axios from '../lib/axios';
+import SearchBar from '../components/SearchBar';
 
 const UsersPage = () => {
   const [users, setUsers] = useState([]);
@@ -18,11 +19,13 @@ const UsersPage = () => {
   });
 
   const [kitchens, setKitchens] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortConfig, setSortConfig] = useState({ key: 'username', direction: 'asc' });
 
   useEffect(() => {
     fetchUsers();
     fetchKitchens();
-  }, []);
+  }, [searchQuery, sortConfig]);
 
   const fetchKitchens = async () => {
     try {
@@ -35,13 +38,32 @@ const UsersPage = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get('/auth');
+      setLoading(true);
+      const params = {};
+      if (searchQuery) params.q = searchQuery;
+      if (sortConfig.key) {
+        params.sortBy = sortConfig.key;
+        params.order = sortConfig.direction;
+      }
+      const res = await axios.get('/auth', { params });
       setUsers(res.data);
-      setLoading(false);
     } catch (err) {
       console.error("Error fetching users:", err);
+    } finally {
       setLoading(false);
     }
+  };
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+  };
+
+  const handleSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
   };
 
   const [isEditing, setIsEditing] = useState(false);
@@ -99,6 +121,20 @@ const UsersPage = () => {
         <Button onClick={() => { setShowForm(!showForm); setIsEditing(false); setNewUser({ username: '', password: '', role: 'kitchen', kitchenId: '' }); }} className="bg-indigo-600 hover:bg-indigo-700 text-white">
           <Plus className="mr-2 h-4 w-4" /> Tambah User
         </Button>
+      </div>
+
+      <div className="flex flex-col md:flex-row gap-4 mb-6">
+        <div className="w-full max-w-sm">
+          <SearchBar onSearch={handleSearch} placeholder="Cari username..." />
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => handleSort('username')} className="h-10">
+            Username {sortConfig.key === 'username' ? (sortConfig.direction === 'asc' ? <ArrowUp className="ml-2 h-4 w-4" /> : <ArrowDown className="ml-2 h-4 w-4" />) : <ArrowUpDown className="ml-2 h-4 w-4" />}
+          </Button>
+          <Button variant="outline" onClick={() => handleSort('role')} className="h-10">
+            Role {sortConfig.key === 'role' ? (sortConfig.direction === 'asc' ? <ArrowUp className="ml-2 h-4 w-4" /> : <ArrowDown className="ml-2 h-4 w-4" />) : <ArrowUpDown className="ml-2 h-4 w-4" />}
+          </Button>
+        </div>
       </div>
 
       {showForm && (
@@ -165,36 +201,45 @@ const UsersPage = () => {
         </Card>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {users.map((user) => (
-          <Card key={user._id} className="hover:shadow-lg transition-shadow border-0 shadow-sm">
-            <CardHeader className="pb-2">
-              <div className="flex justify-between items-start">
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center mb-2 ${user.role === 'admin' ? 'bg-purple-100 text-purple-600' : 'bg-blue-100 text-blue-600'}`}>
-                  {user.role === 'admin' ? <Shield className="h-6 w-6" /> : <User className="h-6 w-6" />}
+      {loading ? (
+        <div className="text-center py-12 text-slate-500">Memuat pengguna...</div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {users.map((user) => (
+            <Card key={user._id} className="hover:shadow-lg transition-shadow border-0 shadow-sm">
+              <CardHeader className="pb-2">
+                <div className="flex justify-between items-start">
+                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center mb-2 ${user.role === 'admin' ? 'bg-purple-100 text-purple-600' : 'bg-blue-100 text-blue-600'}`}>
+                    {user.role === 'admin' ? <Shield className="h-6 w-6" /> : <User className="h-6 w-6" />}
+                  </div>
+                  <div className="flex gap-1">
+                      <Button variant="ghost" size="icon" className="text-slate-400 hover:text-indigo-500" onClick={() => handleEdit(user)}>
+                          <User className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon" className="text-slate-400 hover:text-red-500" onClick={() => handleDelete(user._id)}>
+                          <Trash2 className="h-4 w-4" />
+                      </Button>
+                  </div>
                 </div>
-                <div className="flex gap-1">
-                    <Button variant="ghost" size="icon" className="text-slate-400 hover:text-indigo-500" onClick={() => handleEdit(user)}>
-                        <User className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="icon" className="text-slate-400 hover:text-red-500" onClick={() => handleDelete(user._id)}>
-                        <Trash2 className="h-4 w-4" />
-                    </Button>
+                <CardTitle className="text-lg">{user.username}</CardTitle>
+                <CardDescription className="capitalize">
+                  {user.role === 'admin' ? 'Administrator' : 'Operator Dapur'}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-sm text-slate-500">
+                  {user.kitchenId ? `Kitchen: ${user.kitchenId.name || 'Assigned'}` : 'No Kitchen Assigned'}
                 </div>
-              </div>
-              <CardTitle className="text-lg">{user.username}</CardTitle>
-              <CardDescription className="capitalize">
-                {user.role === 'admin' ? 'Administrator' : 'Operator Dapur'}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-sm text-slate-500">
-                {user.kitchenId ? `Kitchen: ${user.kitchenId.name || 'Assigned'}` : 'No Kitchen Assigned'}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+              </CardContent>
+            </Card>
+          ))}
+          {users.length === 0 && (
+            <div className="col-span-3 text-center py-12 text-slate-500">
+              Tidak ada data pengguna yang ditemukan.
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

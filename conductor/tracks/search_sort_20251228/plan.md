@@ -34,13 +34,11 @@
     - [ ] Subtask: Update API calls to include `q`, `sortBy`, `order`
     - [ ] Subtask: Manage state in `CommoditiesPage.jsx`
 
-- [ ] Task: Implement Search/Sort for UsersPage
-    - [ ] Subtask: Integrate SearchBar and Sort logic into UsersPage
-
-- [ ] Task: Implement Search/Sort for KitchensPage
+- [x] Task: Implement Search/Sort for UsersPage
+- [x] Task: Implement Search/Sort for KitchensPage
     - [ ] Subtask: Integrate SearchBar and Sort logic into KitchensPage
 
-- [ ] Task: Implement Search/Sort for ReportsPage
+- [~] Task: Implement Search/Sort for ReportsPage
     - [ ] Subtask: Integrate SearchBar and Sort logic into ReportsPage
 
 - [ ] Task: Conductor - User Manual Verification 'Frontend Components & Integration' (Protocol in workflow.md)

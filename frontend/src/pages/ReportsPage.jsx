@@ -2,30 +2,54 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { FileText, Download, Filter, Calendar } from 'lucide-react';
+import { FileText, Download, Filter, Calendar, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import axios from '../lib/axios';
+import SearchBar from '../components/SearchBar';
 
 const ReportsPage = () => {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+  const [sortConfig, setSortConfig] = useState({ key: 'date', direction: 'desc' });
 
   const [selectedReport, setSelectedReport] = useState(null);
   const [showDetail, setShowDetail] = useState(false);
 
   const fetchReports = async () => {
     try {
-      const res = await axios.get('/reports');
+      setLoading(true);
+      const params = {};
+      if (searchQuery) params.q = searchQuery;
+      if (statusFilter) params.status = statusFilter;
+      if (sortConfig.key) {
+        params.sortBy = sortConfig.key;
+        params.order = sortConfig.direction;
+      }
+      const res = await axios.get('/reports', { params });
       setReports(res.data);
-      setLoading(false);
     } catch (err) {
       console.error("Error fetching reports:", err);
+    } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchReports();
-  }, []);
+  }, [searchQuery, statusFilter, sortConfig]);
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+  };
+
+  const handleSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
 
   const handleViewDetail = (report) => {
     setSelectedReport(report);
@@ -44,24 +68,41 @@ const ReportsPage = () => {
     }
   };
 
+  const SortableHead = ({ label, sortKey, className = "" }) => (
+    <th className={`h-12 px-4 align-middle font-medium text-slate-500 ${className}`}>
+      <Button variant="ghost" onClick={() => handleSort(sortKey)} className="-ml-4 h-8 hover:bg-transparent">
+        {label}
+        {sortConfig.key === sortKey ? (sortConfig.direction === 'asc' ? <ArrowUp className="ml-2 h-4 w-4" /> : <ArrowDown className="ml-2 h-4 w-4" />) : <ArrowUpDown className="ml-2 h-4 w-4" />}
+      </Button>
+    </th>
+  );
+
   return (
     <div className="max-w-5xl mx-auto">
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-bold text-slate-900">Laporan & SPJ</h1>
             <p className="text-slate-500">Riwayat laporan belanja dan status verifikasi.</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" className="bg-white">
-              <Calendar className="mr-2 h-4 w-4" /> Filter Tanggal
-            </Button>
-            <Button variant="outline" className="bg-white">
-              <Filter className="mr-2 h-4 w-4" /> Status
-            </Button>
-            <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
+            <select 
+              className="flex h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+            >
+              <option value="">Semua Status</option>
+              <option value="pending">Pending</option>
+              <option value="verified">Verified</option>
+              <option value="rejected">Rejected</option>
+            </select>
+            <Button className="bg-indigo-600 hover:bg-indigo-700 text-white whitespace-nowrap">
               <Download className="mr-2 h-4 w-4" /> Export Excel
             </Button>
           </div>
+        </div>
+
+        <div className="mb-6 w-full max-w-sm">
+          <SearchBar onSearch={handleSearch} placeholder="Cari nama dapur..." />
         </div>
 
         <Card className="shadow-sm border-0">
@@ -75,42 +116,48 @@ const ReportsPage = () => {
                 <thead className="[&_tr]:border-b">
                   <tr className="border-b transition-colors hover:bg-slate-50/50 data-[state=selected]:bg-slate-50">
                     <th className="h-12 px-4 align-middle font-medium text-slate-500">ID Laporan</th>
-                    <th className="h-12 px-4 align-middle font-medium text-slate-500">Tanggal</th>
+                    <SortableHead label="Tanggal" sortKey="date" />
                     <th className="h-12 px-4 align-middle font-medium text-slate-500">Dapur</th>
-                    <th className="h-12 px-4 align-middle font-medium text-slate-500">Total Belanja</th>
-                    <th className="h-12 px-4 align-middle font-medium text-slate-500">Status</th>
+                    <SortableHead label="Total Belanja" sortKey="totalExpenditure" />
+                    <SortableHead label="Status" sortKey="status" />
                     <th className="h-12 px-4 align-middle font-medium text-slate-500 text-right">Aksi</th>
                   </tr>
                 </thead>
                 <tbody className="[&_tr:last-child]:border-0">
-                  {reports.map((report) => (
-                    <tr key={report._id} className="border-b transition-colors hover:bg-slate-50/50 data-[state=selected]:bg-slate-50">
-                      <td className="p-4 align-middle font-medium">{report._id.substring(0, 8)}...</td>
-                      <td className="p-4 align-middle">{new Date(report.date).toLocaleDateString('id-ID')}</td>
-                      <td className="p-4 align-middle">{report.kitchen?.name || 'Unknown'}</td>
-                      <td className="p-4 align-middle">Rp {report.totalExpenditure?.toLocaleString('id-ID') || 0}</td>
-                      <td className="p-4 align-middle">
-                        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${
-                          report.status === 'verified' 
-                            ? 'bg-emerald-100 text-emerald-800' 
-                            : report.status === 'rejected'
-                            ? 'bg-red-100 text-red-800'
-                            : 'bg-amber-100 text-amber-800'
-                        }`}>
-                          {report.status.charAt(0).toUpperCase() + report.status.slice(1)}
-                        </span>
-                      </td>
-                      <td className="p-4 align-middle text-right">
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => handleViewDetail(report)}>
-                          <FileText className="h-4 w-4" />
-                          <span className="sr-only">Detail</span>
-                        </Button>
-                      </td>
+                  {loading ? (
+                    <tr>
+                      <td colSpan="6" className="p-8 text-center text-slate-500">Memuat laporan...</td>
                     </tr>
-                  ))}
+                  ) : (
+                    reports.map((report) => (
+                      <tr key={report._id} className="border-b transition-colors hover:bg-slate-50/50 data-[state=selected]:bg-slate-50">
+                        <td className="p-4 align-middle font-medium">{report._id.substring(0, 8)}...</td>
+                        <td className="p-4 align-middle">{new Date(report.date).toLocaleDateString('id-ID')}</td>
+                        <td className="p-4 align-middle">{report.kitchen?.name || 'Unknown'}</td>
+                        <td className="p-4 align-middle">Rp {report.totalExpenditure?.toLocaleString('id-ID') || 0}</td>
+                        <td className="p-4 align-middle">
+                          <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${
+                            report.status === 'verified' 
+                              ? 'bg-emerald-100 text-emerald-800' 
+                              : report.status === 'rejected'
+                              ? 'bg-red-100 text-red-800'
+                              : 'bg-amber-100 text-amber-800'
+                          }`}>
+                            {report.status.charAt(0).toUpperCase() + report.status.slice(1)}
+                          </span>
+                        </td>
+                        <td className="p-4 align-middle text-right">
+                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => handleViewDetail(report)}>
+                            <FileText className="h-4 w-4" />
+                            <span className="sr-only">Detail</span>
+                          </Button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                   {!loading && reports.length === 0 && (
                     <tr>
-                      <td colSpan="6" className="p-4 text-center text-slate-500">Belum ada laporan.</td>
+                      <td colSpan="6" className="p-4 text-center text-slate-500">Tidak ada laporan yang ditemukan.</td>
                     </tr>
                   )}
                 </tbody>

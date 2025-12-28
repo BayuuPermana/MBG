@@ -1,0 +1,8 @@
+{
+  "track_id": "bug_commodity_uniqueness_20251228",
+  "type": "bug",
+  "status": "new",
+  "created_at": "2025-12-28T13:40:00Z",
+  "updated_at": "2025-12-28T13:40:00Z",
+  "description": "Allow commodities with the same name to exist in different regions by fixing the uniqueness constraint."
+}

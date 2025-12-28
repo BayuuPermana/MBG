@@ -20,22 +20,11 @@
 
 - [ ] Task: Conductor - User Manual Verification 'Backend Implementation' (Protocol in workflow.md)
 
-## Phase 2: Frontend Integration
+## Phase 2: Frontend Integration [checkpoint: bc3de5a]
 
 - [x] Task: Setup Commodity API client 5e493ff
-    - [ ] Subtask: Write unit tests for axios wrapper functions (`fetchCommodities`, `createCommodity`, `updateCommodity`)
-    - [ ] Subtask: Implement API service functions in `frontend/src/lib/api/commodities.js`
-
 - [x] Task: Build Commodity Table Component 948bb19
-    - [ ] Subtask: Write component test for rendering table with mock data
-    - [ ] Subtask: Implement `CommodityTable.jsx` using Shadcn UI Table
-
 - [x] Task: Build Add/Edit Commodity Modal af6c0ff
-    - [ ] Subtask: Write component test for form validation and submission
-    - [ ] Subtask: Implement `CommodityForm.jsx` using Shadcn UI Dialog and Form
-
 - [x] Task: Integrate components into Dashboard Page dff5e45
-    - [ ] Subtask: Implement `CommoditiesPage.jsx` and wire up state/data fetching
-    - [ ] Subtask: Add navigation link to Sidebar
 
-- [ ] Task: Conductor - User Manual Verification 'Frontend Integration' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Frontend Integration' (Protocol in workflow.md) bc3de5a

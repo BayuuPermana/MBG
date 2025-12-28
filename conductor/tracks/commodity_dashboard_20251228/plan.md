@@ -26,7 +26,7 @@
     - [ ] Subtask: Write unit tests for axios wrapper functions (`fetchCommodities`, `createCommodity`, `updateCommodity`)
     - [ ] Subtask: Implement API service functions in `frontend/src/lib/api/commodities.js`
 
-- [ ] Task: Build Commodity Table Component
+- [x] Task: Build Commodity Table Component 948bb19
     - [ ] Subtask: Write component test for rendering table with mock data
     - [ ] Subtask: Implement `CommodityTable.jsx` using Shadcn UI Table
 

@@ -12,16 +12,16 @@ router.get('/', verifyToken, async (req, res) => {
     }
 });
 
-// UPDATE/CREATE COMMODITY (For Admin/Seed)
+// CREATE COMMODITY
 router.post('/', verifyTokenAndAdmin, async (req, res) => {
     try {
-        const commodity = await Commodity.findOneAndUpdate(
-            { name: req.body.name },
-            req.body,
-            { new: true, upsert: true }
-        );
-        res.status(200).json(commodity);
+        const newCommodity = new Commodity(req.body);
+        const savedCommodity = await newCommodity.save();
+        res.status(201).json(savedCommodity);
     } catch (err) {
+        if (err.name === 'ValidationError') {
+            return res.status(400).json(err);
+        }
         res.status(500).json(err);
     }
 });

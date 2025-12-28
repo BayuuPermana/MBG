@@ -48,7 +48,22 @@ router.post('/login', async (req, res) => {
 // GET ALL USERS
 router.get('/', async (req, res) => {
     try {
-        const users = await User.find().populate('kitchenId', 'name');
+        const { q, sortBy, order } = req.query;
+        let query = {};
+        
+        if (q) {
+            query.username = { $regex: q, $options: 'i' };
+        }
+
+        let sortOptions = {};
+        if (sortBy) {
+            sortOptions[sortBy] = order === 'desc' ? -1 : 1;
+        }
+
+        const users = await User.find(query)
+            .sort(sortOptions)
+            .populate('kitchenId', 'name');
+            
         const usersList = users.map(user => {
             const { password, ...other } = user._doc;
             return other;

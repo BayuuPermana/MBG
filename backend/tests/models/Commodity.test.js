@@ -50,4 +50,35 @@ describe('Commodity Model', () => {
       expect(commodity.history).toHaveLength(1);
       expect(commodity.history[0].price).toBe(24000);
   });
+
+  describe('Uniqueness Constraints', () => {
+      beforeAll(async () => {
+          if (mongoose.connection.readyState === 0) {
+              await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/mbg_test');
+          }
+          await Commodity.deleteMany({});
+          // Ensure indexes are built
+          await Commodity.syncIndexes();
+      });
+
+      afterAll(async () => {
+          await Commodity.deleteMany({});
+          await mongoose.connection.close();
+      });
+
+      it('should allow same name in different regions', async () => {
+          await Commodity.create({ name: 'Unique Rice', category: 'Carbs', price: 1000, unit: 'kg', region: 'Region A' });
+          const second = await Commodity.create({ name: 'Unique Rice', category: 'Carbs', price: 1200, unit: 'kg', region: 'Region B' });
+          expect(second._id).toBeDefined();
+      });
+
+      it('should NOT allow same name in SAME region', async () => {
+          try {
+              await Commodity.create({ name: 'Unique Rice', category: 'Carbs', price: 1500, unit: 'kg', region: 'Region A' });
+              throw new Error('Should have failed');
+          } catch (err) {
+              expect(err.code).toBe(11000); // Duplicate key error
+          }
+      });
+  });
 });

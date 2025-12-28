@@ -4,5 +4,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-## [ ] Track: Implement a centralized Commodity Pricing Dashboard for BGN Administrators to manage regional food costs.
+## [~] Track: Implement a centralized Commodity Pricing Dashboard for BGN Administrators to manage regional food costs.
 *Link: [./conductor/tracks/commodity_dashboard_20251228/](./conductor/tracks/commodity_dashboard_20251228/)*

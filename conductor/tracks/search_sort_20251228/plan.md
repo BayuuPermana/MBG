@@ -26,7 +26,7 @@
     - [ ] Subtask: Implement `SearchBar.jsx` with debounce
     - [ ] Subtask: Write component test
 
-- [ ] Task: Update CommodityTable to support Sorting
+- [x] Task: Update CommodityTable to support Sorting 5365ed1
     - [ ] Subtask: Add `onSort` props and visual indicators to headers
     - [ ] Subtask: Refactor `CommodityTable.jsx`
 

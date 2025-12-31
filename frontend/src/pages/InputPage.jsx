@@ -133,66 +133,84 @@ const InputPage = () => {
           <CardContent className="pt-6">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-4">
-                {items.map((item, index) => (
-                  <div key={index} className="p-4 bg-slate-50 rounded-xl border border-slate-200 relative group hover:border-indigo-200 transition-colors">
-                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <Button type="button" variant="ghost" size="sm" className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50" onClick={() => handleRemoveItem(index)}>
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-                      <div className="md:col-span-4 space-y-2">
-                        <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Komoditas</Label>
-                        <select 
-                          className="flex h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                          value={item.commodity}
-                          onChange={(e) => handleItemChange(index, 'commodity', e.target.value)}
-                          required
+                {items.map((item, index) => {
+                  const commodityId = `commodity-${index}`;
+                  const quantityId = `quantity-${index}`;
+                  const unitId = `unit-${index}`;
+                  const priceId = `price-${index}`;
+
+                  return (
+                    <div key={index} className="p-4 bg-slate-50 rounded-xl border border-slate-200 relative group hover:border-indigo-200 transition-colors">
+                      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50"
+                          onClick={() => handleRemoveItem(index)}
+                          aria-label={`Hapus item baris ke-${index + 1}`}
                         >
-                          <option value="">Pilih Komoditas</option>
-                          {commodities.map(c => (
-                            <option key={c._id} value={c.name}>{c.name}</option>
-                          ))}
-                        </select>
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
                       </div>
-                      <div className="md:col-span-3 space-y-2">
-                        <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Jumlah</Label>
-                        <div className="flex gap-2">
+                      <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+                        <div className="md:col-span-4 space-y-2">
+                          <Label htmlFor={commodityId} className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Komoditas</Label>
+                          <select
+                            id={commodityId}
+                            className="flex h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                            value={item.commodity}
+                            onChange={(e) => handleItemChange(index, 'commodity', e.target.value)}
+                            required
+                          >
+                            <option value="">Pilih Komoditas</option>
+                            {commodities.map(c => (
+                              <option key={c._id} value={c.name}>{c.name}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="md:col-span-3 space-y-2">
+                          <Label htmlFor={quantityId} className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Jumlah</Label>
+                          <div className="flex gap-2">
+                            <Input
+                              id={quantityId}
+                              type="number"
+                              placeholder="0"
+                              className="bg-white"
+                              value={item.quantity}
+                              onChange={(e) => handleItemChange(index, 'quantity', e.target.value)}
+                              required
+                            />
+                          </div>
+                        </div>
+                        <div className="md:col-span-2 space-y-2">
+                          <Label htmlFor={unitId} className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Satuan</Label>
+                          <Input
+                              id={unitId}
+                              placeholder="kg"
+                              className="bg-white"
+                              value={item.unit}
+                              onChange={(e) => handleItemChange(index, 'unit', e.target.value)}
+                              required
+                              readOnly // Make read-only as it's auto-filled
+                            />
+                        </div>
+                        <div className="md:col-span-3 space-y-2">
+                          <Label htmlFor={priceId} className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Harga Total (Rp)</Label>
                           <Input 
+                            id={priceId}
                             type="number" 
                             placeholder="0" 
                             className="bg-white" 
-                            value={item.quantity}
-                            onChange={(e) => handleItemChange(index, 'quantity', e.target.value)}
+                            value={item.price}
+                            onChange={(e) => handleItemChange(index, 'price', e.target.value)}
                             required
                           />
                         </div>
                       </div>
-                      <div className="md:col-span-2 space-y-2">
-                        <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Satuan</Label>
-                        <Input 
-                            placeholder="kg" 
-                            className="bg-white" 
-                            value={item.unit}
-                            onChange={(e) => handleItemChange(index, 'unit', e.target.value)}
-                            required
-                            readOnly // Make read-only as it's auto-filled
-                          />
-                      </div>
-                      <div className="md:col-span-3 space-y-2">
-                        <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Harga Total (Rp)</Label>
-                        <Input 
-                          type="number" 
-                          placeholder="0" 
-                          className="bg-white" 
-                          value={item.price}
-                          onChange={(e) => handleItemChange(index, 'price', e.target.value)}
-                          required
-                        />
-                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
               
               <Button type="button" variant="outline" onClick={handleAddItem} className="w-full border-dashed border-2 py-6 hover:bg-slate-50 hover:border-indigo-300 hover:text-indigo-600 transition-all">
@@ -202,7 +220,7 @@ const InputPage = () => {
               <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
                 <Label className="text-base font-medium mb-2 block">Upload Foto Nota/Struk</Label>
                 <div className="flex items-center gap-4">
-                  <Input type="file" className="hidden" id="file-upload" />
+                  <Input type="file" className="sr-only" id="file-upload" />
                   <Label htmlFor="file-upload" className="cursor-pointer flex items-center justify-center w-full h-32 border-2 border-dashed border-slate-300 rounded-lg hover:bg-white hover:border-indigo-400 transition-all">
                     <div className="text-center">
                       <Upload className="mx-auto h-8 w-8 text-slate-400 mb-2" />

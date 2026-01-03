@@ -1,5 +1,3 @@
-## 2025-12-14 - Login Loading & Accessibility
-**Learning:** shadcn/ui Button component doesn't have a built-in `loading` prop.
-**Action:** Must manually implement loading state using `disabled={loading}` and conditionally rendering a spinner (e.g., `Loader2` from `lucide-react`) inside the button children.
-**Learning:** Browser autofill is inconsistent without explicit attributes.
-**Action:** Always add `autoComplete="username"` and `autoComplete="current-password"` to login forms to support password managers and accessibility tools.
+## 2024-05-23 - Micro-interactions for Row Actions
+**Learning:** Using `group-focus-within:opacity-100` on hidden row actions (like delete buttons) is a powerful pattern to make "hover-only" UI accessible to keyboard users without changing the visual design for mouse users.
+**Action:** Apply `group-focus-within` alongside `group-hover` for any action buttons that are conditionally revealed in a list or table row. Ensure the container has `group`.

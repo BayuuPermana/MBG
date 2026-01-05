@@ -48,4 +48,7 @@ const reportSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
+// Optimize queries filtering by status and sorting by date (common dashboard pattern)
+reportSchema.index({ status: 1, date: -1 });
+
 module.exports = mongoose.model('Report', reportSchema);

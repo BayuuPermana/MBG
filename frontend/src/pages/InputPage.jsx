@@ -202,8 +202,8 @@ const InputPage = () => {
               <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
                 <Label className="text-base font-medium mb-2 block">Upload Foto Nota/Struk</Label>
                 <div className="flex items-center gap-4">
-                  <Input type="file" className="hidden" id="file-upload" />
-                  <Label htmlFor="file-upload" className="cursor-pointer flex items-center justify-center w-full h-32 border-2 border-dashed border-slate-300 rounded-lg hover:bg-white hover:border-indigo-400 transition-all">
+                  <Input type="file" className="sr-only peer" id="file-upload" />
+                  <Label htmlFor="file-upload" className="cursor-pointer flex items-center justify-center w-full h-32 border-2 border-dashed border-slate-300 rounded-lg hover:bg-white hover:border-indigo-400 transition-all peer-focus-visible:ring-2 peer-focus-visible:ring-indigo-500 peer-focus-visible:ring-offset-2">
                     <div className="text-center">
                       <Upload className="mx-auto h-8 w-8 text-slate-400 mb-2" />
                       <span className="text-sm text-slate-500">Klik untuk upload foto struk</span>

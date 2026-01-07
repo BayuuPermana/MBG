@@ -3,3 +3,7 @@
 **Action:** Must manually implement loading state using `disabled={loading}` and conditionally rendering a spinner (e.g., `Loader2` from `lucide-react`) inside the button children.
 **Learning:** Browser autofill is inconsistent without explicit attributes.
 **Action:** Always add `autoComplete="username"` and `autoComplete="current-password"` to login forms to support password managers and accessibility tools.
+
+## 2025-10-27 - Hidden File Inputs
+**Learning:** Using `display: none` or `hidden` on file inputs removes them from the accessibility tree, making them inaccessible to keyboard and screen reader users.
+**Action:** Use `sr-only` class combined with `peer` on the input, and `peer-focus-visible:ring` styles on the associated label to ensure the input is visually hidden but focusable and indicates focus state.

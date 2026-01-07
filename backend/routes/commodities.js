@@ -16,7 +16,9 @@ router.get('/', verifyToken, async (req, res) => {
             sortOptions[sortBy] = order === 'desc' ? -1 : 1;
         }
 
-        const commodities = await Commodity.find(query).sort(sortOptions);
+        // Optimization: Use .lean() to return plain POJOs instead of full Mongoose documents
+        // This significantly reduces memory usage and improves response time for read-only data
+        const commodities = await Commodity.find(query).sort(sortOptions).lean();
         res.status(200).json(commodities);
     } catch (err) {
         res.status(500).json(err);
